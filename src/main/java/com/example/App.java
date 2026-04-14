@@ -8,11 +8,15 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 public class App {
 
     public static void main(String[] args) throws InterruptedException {
-	
-	FirefoxOptions options=new FirefoxOptions();
-	options.setBinary("/usr/lib/firefox/firefox");
-	
-        WebDriver driver = new FirefoxDriver();
+
+        // Firefox options (headless for Jenkins)
+        FirefoxOptions options = new FirefoxOptions();
+        options.addArguments("--headless");   // important for Jenkins/Linux
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
+
+        // Initialize driver with options
+        WebDriver driver = new FirefoxDriver(options);
 
         driver.manage().window().maximize();
 
@@ -47,7 +51,6 @@ public class App {
 
         Thread.sleep(5000);
 
-        // Close popup (if exists)
         try {
             driver.findElement(By.cssSelector(".grippy-host")).click();
         } catch (Exception e) {
@@ -56,7 +59,6 @@ public class App {
 
         Thread.sleep(3000);
 
-        // Add first product
         driver.findElement(By.xpath("(//a[contains(text(),'Add to cart')])[1]")).click();
 
         Thread.sleep(5000);
@@ -65,7 +67,6 @@ public class App {
 
         System.out.println("Product added to cart");
 
-        // Optional: close browser
-        // driver.quit();
+        driver.quit();
     }
 }
